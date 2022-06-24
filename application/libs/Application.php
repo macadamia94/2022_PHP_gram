@@ -1,7 +1,8 @@
 <?php
 namespace application\libs;
 
-require_once "application/utils/UrlUtils.php";
+// 모든 파일에서 쓰고 싶은 것이 있다면 Apllication에 추가하면 다른 파일에서도 사용가능
+require_once "application/utils/UrlUtils.php";  
 
 class Application{
     
