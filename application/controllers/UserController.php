@@ -7,22 +7,23 @@ class UserController extends Controller {
             case _GET:
                 return "user/signin.php";
             case _POST:
-                $param = [
-                    "email" => $_POST["email"],
-                    "pw" => $_POST["pw"],
-                ];
+                $email = $_POST["email"];
+                $pw = $_POST["pw"];
+                $param = ["email" => $email];
                 $dbUser = $this->model->selUser($param);
+                /* 
                 if($dbUser === false) {
-                    print "아이디 없음 <br>";
                     return "redirect:signin";
-                } else if(!password_verify($param["pw"], $dbUser->pw)) {
-                    print "비밀번호 다름 <br>";
+                } else if(!password_verify($pw, $dbUser->pw)) {
                     return "redirect:signin";
                 }
-                
-                session_start();
-                $_SESSION[_LOGINUSER] = $dbUser;
-                
+                 */
+                if(!$dbUser || !password_verify($pw, $dbUser->pw)) {
+                    return "redirect:signin?email={$email}&err";
+                }
+                // $_SESSION[_LOGINUSER] = $dbUser;
+                // print_r($_SESSION[_LOGINUSER]);
+
                 return "redirect:/feed/index";
         }
         return "user/signin.php";
