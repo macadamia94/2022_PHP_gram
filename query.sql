@@ -1,7 +1,3 @@
-CREATE DATABASE phpgram;
-
-USE phpgram;
-
 CREATE TABLE t_user(
    iuser INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
    email VARCHAR(50) NOT NULL,   
@@ -89,4 +85,4 @@ CREATE TABLE t_dm_msg(
      PRIMARY KEY(idm, seq),
      FOREIGN KEY(idm) REFERENCES t_dm(idm),
      FOREIGN KEY(iuser) REFERENCES t_user(iuser)
-);
+)

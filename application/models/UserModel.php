@@ -25,7 +25,7 @@ class UserModel extends Model {
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":email", $param["email"]);        
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_OBJ);    // 값이 없을 경우 false가 넘어감
+        return $stmt->fech(PDO::FETCH_OBJ);
     }
     
 }

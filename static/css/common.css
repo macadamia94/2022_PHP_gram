@@ -16,7 +16,6 @@ table { border-collapse: collapse; border-spacing: 0; }
 .circleimg > img { width: 100%; height: 100%; object-fit: cover; }
 .d-none { display: none !important; }
 .div-top { border-top : 1px solid #e3e3e3; }
-.err {color: red;}
 .fa-heart { color: #ea4040; }
 .container-center { display: flex; justify-content: center; align-items: center; }
 .h24 { height: 24px; }
