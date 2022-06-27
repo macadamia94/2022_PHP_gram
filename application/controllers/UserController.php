@@ -2,6 +2,8 @@
 namespace application\controllers;
 
 class UserController extends Controller {
+    
+    // 로그인
     public function signin() {
         switch(getMethod()) {
             case _GET:
@@ -19,16 +21,17 @@ class UserController extends Controller {
                 }
                  */
                 if(!$dbUser || !password_verify($pw, $dbUser->pw)) {
-                    return "redirect:signin?email={$email}&err";
+                    return "redirect:signin?email={$email}&err"; // key값은 있지만 value값이 없는 쿼리스트링
                 }
-                // $_SESSION[_LOGINUSER] = $dbUser;
-                // print_r($_SESSION[_LOGINUSER]);
-
+                $dbUser->pw = null; // 메모리 차지하고 있기 때문에 필요없는 값은 지워주는 것이 좋음
+                $dbUser->regdt = null;
+                $this->flash(_LOGINUSER, $dbUser);
                 return "redirect:/feed/index";
         }
         return "user/signin.php";
     }
 
+    // 회원가입
     public function signup() {
         switch(getMethod()) {
             case _GET:
@@ -43,5 +46,11 @@ class UserController extends Controller {
                 $this->model->insUser($param);
                 return "redirect:signin";
         }
+    }
+
+    // 로그아웃
+    public function logout() {
+        $this->flash(_LOGINUSER);
+        return "redirect:/user/signin";
     }
 }

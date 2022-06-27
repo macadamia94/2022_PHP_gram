@@ -1,5 +1,5 @@
 <?php
-    function getParam($key) {
+    function getParam($key) { // 쿼리스트링 유무 확인
         return isset($_GET[$key]) ? $_GET[$key] : "";
     }
     function getUrl() {
