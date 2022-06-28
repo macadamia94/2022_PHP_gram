@@ -4,7 +4,8 @@
     const modal = document.querySelector('#newFeedModal');
     const body = modal.querySelector('#id-modal-body');
     const frmElem = modal.querySelector('form'); // modal안의 form태그
-
+    const btnClose = modal.querySelector('.btn-close');
+    
     //이미지 값이 변하면
     frmElem.imgs.addEventListener('change', function (e) {
       // form 태그에서는 id나 name과 같은 자식에게 접근할 때 점(.)으로 접근가능
@@ -34,28 +35,28 @@
         };
 
         const shareBtnElem = body.querySelector('button');  // 삽입한 body안에서 태그가 버튼인 것을 찾음
-        shareBtnElem.addEventListener('click', function () {
+        shareBtnElem.addEventListener('click', function() {
           const files = frmElem.imgs.files;
 
           const fData = new FormData();
           for (let i = 0; i < files.length; i++) {
-            fData.append('imgs', files[i]);
+            fData.append('imgs[]', files[i]);
           }
           fData.append('ctnt', body.querySelector('textarea').value);
           fData.append('location', body.querySelector('input[type=text]').value);
 
-          fetch('/feed/reg', {
+          fetch('/feed/rest', {
             method: 'post',
             body: fData
           }).then(res => res.json())
             .then(myJson => {
+              console.log(myJson);
+              // const closeBtn = modal.querySelector('.btn-close');
+              // closeBtn.click();
 
-              const closeBtn = modal.querySelector('.btn-close');
-              closeBtn.click();
-
-              if (feedObj && myJson.result) {
-                feedObj.refreshList();
-              }
+              // if (feedObj && myJson.result) {
+              //   feedObj.refreshList();
+              // }
             });
         });
       }
