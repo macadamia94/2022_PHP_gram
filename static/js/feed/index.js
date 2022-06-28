@@ -5,7 +5,7 @@
     const body = modal.querySelector('#id-modal-body');
     const frmElem = modal.querySelector('form'); // modal안의 form태그
     const btnClose = modal.querySelector('.btn-close');
-    
+
     //이미지 값이 변하면
     frmElem.imgs.addEventListener('change', function (e) {
       // form 태그에서는 id나 name과 같은 자식에게 접근할 때 점(.)으로 접근가능
@@ -51,8 +51,10 @@
           }).then(res => res.json())
             .then(myJson => {
               console.log(myJson);
-              // const closeBtn = modal.querySelector('.btn-close');
-              // closeBtn.click();
+
+          if(myJson.result) {                                
+            btnClose.click();
+           }
 
               // if (feedObj && myJson.result) {
               //   feedObj.refreshList();
