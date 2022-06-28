@@ -5,8 +5,7 @@ namespace application\models;
 use Exception;
 use PDO;
 
-class Model
-{
+class Model {
   public function __construct() {
     $dsn = _DBTYPE . ':host=' . _DBHOST . ';dbname=' . _DBNAME . ';charset=' . _CHARSET;
     try {

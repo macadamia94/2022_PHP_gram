@@ -1,13 +1,10 @@
 <?php
-
 namespace application\models;
 
 use PDO;
 
-
 //$pdo -> lastInsertId();
-
-class UserModel extends Model {
+class UserModel extends Model{
   public function insUser(&$param) {
     $sql = "INSERT INTO t_user
                 ( email, pw, nm ) 
