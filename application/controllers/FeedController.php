@@ -33,6 +33,7 @@ class FeedController extends Controller {
         ];
         $ifeed = $this->model->insFeed($param);
 
+        $paramImg = ["ifeed" => $ifeed];
         foreach($_FILES["imgs"]["name"] as $key => $originFileNm) {
           $saveDirectory = _IMG_PATH . "/feed/" . $ifeed;
           if(!is_dir($saveDirectory)) {
@@ -46,6 +47,18 @@ class FeedController extends Controller {
           }
         }
         return ["result" => 1];
+
+      case _GET:
+        $page = 1;
+        if(isset($_GET["page"])) {
+          $page = intval($_GET["page"]);
+        }
+        $startIdx =  ($page - 1) * _FEED_ITEM_CNT;
+        $param = [
+          "startIdx" => $startIdx,
+          "iuser" => getIuser()
+        ];
+        return $this->model->selFeedList($param);
     }
   }
 }

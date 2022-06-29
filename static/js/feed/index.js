@@ -52,9 +52,9 @@
             .then(myJson => {
               console.log(myJson);
 
-          if(myJson.result) {                                
-            btnClose.click();
-           }
+              if(myJson.result) {                                
+                btnClose.click();
+              }
 
               // if (feedObj && myJson.result) {
               //   feedObj.refreshList();
@@ -76,4 +76,43 @@
       body.appendChild(selFromComBtn);
     });
   }
+
+  const feedObj = {
+    limit: 20,
+    itemLength: 0,
+    currentPage: 1,
+    loadingElem: document.querySelector('.loading'),
+    
+    getFeedList: function() {
+      this.showLoading();
+      const param = {
+        page: this.currentPage++
+      }
+      fetch('/feed/rest' + encodeQueryString(param))
+      .then(res => res.json())
+      .then(list => {
+        console.log(list);
+        this.hideLoading();
+      })
+      .catch(e => {
+        console.error(e);
+        this.hideLoading();
+      });
+    },
+
+    makeFeedList: function(list) {
+      this.hideLoading();
+    },
+    makeFeedItem: function(list) {
+  
+    },
+
+    showLoading: function() { this.loadingElem.classList.remove('d-none'); },
+    hideLoading: function() { this.loadingElem.classList.add('d-none'); }
+  }
+
+
+  feedObj.getFeedList();
+
+
 })();

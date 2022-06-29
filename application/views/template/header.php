@@ -3,7 +3,9 @@
   <div id="globalConst">
     <div class="d-flex flex-column flex-md-row align-items-center">
       <div class="d-inline-flex flex-grow-1 flex-shrink-0">
-        <a href="/feed/index">Home</a>
+      <a href="/feed/index">
+          <img src="/static/svg/logo.svg">
+      </a>
       </div>
 
       <div class="d-inline-flex flex-grow-1 flex-shrink-0"></div>
