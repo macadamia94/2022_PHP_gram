@@ -1,0 +1,3 @@
+main { background-color: rgb(250, 250, 250); }
+.size_box_100 { position: relative; height: 100px; }
+#item_container > .item { border: 1px solid #dfdfdf; border-radius: 8px; }

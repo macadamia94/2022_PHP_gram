@@ -82,7 +82,7 @@
     itemLength: 0,
     currentPage: 1,
     loadingElem: document.querySelector('.loading'),
-    
+    containerElem: document.querySelector('#item_container'),
     getFeedList: function() {
       this.showLoading();
       const param = {
@@ -91,8 +91,7 @@
       fetch('/feed/rest' + encodeQueryString(param))
       .then(res => res.json())
       .then(list => {
-        console.log(list);
-        this.hideLoading();
+        this.makeFeedList(list);
       })
       .catch(e => {
         console.error(e);
@@ -101,10 +100,59 @@
     },
 
     makeFeedList: function(list) {
+      if(list.length !== 0) {
+        list.forEach(item => {
+          const divItem = this.makeFeedItem(item);
+          this.containerElem.appendChild(divItem);
+        });
+      }
       this.hideLoading();
     },
-    makeFeedItem: function(list) {
-  
+    makeFeedItem: function(item) {
+      console.log(item);
+      const divContainer = document.createElement('div');
+      divContainer.className = 'item mt-3 mb-3';
+
+      const divTop = document.createElement('div');
+      divContainer.appendChild(divTop);
+
+      const regDtInfo = getDateTimeInfo(item.regdt);
+      divTop.className = 'd-flex flex-row ps-3 pe-3';
+      const writerImg = `<img src='/static/img/profile/${item.iuser}/${item.mainimg}' 
+        onerror='this.error=null; this.src="/static/img/profile/defaultProfileImg_100.png"'>`;
+
+        divTop.innerHTML = `
+          <div class="d-flex flex-column justify-content-center">
+            <div class="circleimg h40 w40">${writerImg}</div>
+          </div>
+          <div class="p-3 flex-grow-1">
+            <div><sapn class="pointer" onclick="moveToProfile(${item.iuser});">${item.writer}</sapn> - ${regDtInfo}</div>
+            <div>${item.location === null ? '' : item.location}</div>
+          </div>
+        `;
+        const divImgSwiper = document.createElement('div');
+        divContainer.appendChild(divImgSwiper);
+        divImgSwiper.className = 'swiper item_img';
+        divImgSwiper.innerHTML = `
+          <div class="swiper-wrapper"></div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        `;
+        const divSwiperWrapper = divImgSwiper.querySelector('.swiper-wrapper');
+
+
+        const imgObj = item.imgList[0];
+        const divSwiperSlide = document.createElement('div');
+        divSwiperWrapper.appendChild(divSwiperSlide);
+        divSwiperSlide.classList.add('swiper-slide');
+
+        const img = document.createElement('img');
+        divSwiperSlide.appendChild(img);
+        img.className = 'w614';
+        img.src = `/static/img/feed/${item.ifeed}/${imgObj.img}`;
+
+        return divContainer;
     },
 
     showLoading: function() { this.loadingElem.classList.remove('d-none'); },

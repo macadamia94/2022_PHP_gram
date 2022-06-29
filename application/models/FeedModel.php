@@ -54,11 +54,19 @@ class FeedModel extends Model {
                 ON A.ifeed = F.ifeed
              ORDER BY A.ifeed DESC
              LIMIT :startIdx, :feedItemCnt";
-     $stmt = $this->pdo->prepare($sql);
-     $stmt->bindValue(":iuser", $param["iuser"]);
-     $stmt->bindValue(":startIdx", $param["startIdx"]);
-     $stmt->bindValue(":feedItemCnt", _FEED_ITEM_CNT);
-     $stmt->execute();
-     return $stmt->fetchAll(PDO::FETCH_OBJ);
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(":iuser", $param["iuser"]);
+    $stmt->bindValue(":startIdx", $param["startIdx"]);
+    $stmt->bindValue(":feedItemCnt", _FEED_ITEM_CNT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+  }
+
+  public function selFeedImgList($param) {
+    $sql = "SELECT img FROM t_feed_img WHERE ifeed = :ifeed";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(":ifeed", $param->ifeed);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
   }
 }
