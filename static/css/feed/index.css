@@ -4,7 +4,7 @@ main {
   --font : Arial
 }
 .fas { color: #ea4040; }
-.w100p_mw614 { width: 100%; max-width: 614px; max-height: 400px; object-fit: contain; }
-.size_box_100 { position: relative; height: 100px; }
+.w100p_mw614 { width: 100%; max-width: 614px; }
 #item_container > .item { border: 1px solid #dfdfdf; border-radius: 8px; background-color: #fff;
 font-family: var(--font) }
+.date_font{ font-size: small; color: #727272;}

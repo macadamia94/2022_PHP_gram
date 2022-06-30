@@ -7,7 +7,6 @@
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="/static/css/common.css">
-  <link rel="stylesheet" href="/static/css/feed/index.css">
   <?php
   if (isset($this->css)) {
     foreach ($this->css as $item) {

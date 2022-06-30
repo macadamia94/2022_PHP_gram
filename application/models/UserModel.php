@@ -27,4 +27,14 @@ class UserModel extends Model {
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_OBJ);    // 값이 없을 경우 false가 넘어감
   }
+
+  public function selUserByIuser(&$param) {
+    $sql = "SELECT iuser, email, nm, cmt, mainimg, regdt 
+              FROM t_user
+             WHERE iuser = :iuser";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(":iuser", $param["iuser"]);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
 }

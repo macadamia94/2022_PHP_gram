@@ -77,6 +77,10 @@
     });
   }
 
+  function moveToFeedWin(iuser) {
+    location.href= `/user/feedwin?iuser=${iuser}`;
+  }
+
   const feedObj = {
     limit: 20,
     itemLength: 0,
@@ -108,16 +112,16 @@
         });
       }
 
-      if(this.swiper !== null) { this.swiper = null; }
+      if (this.swiper !== null) { this.swiper = null; }
       this.swiper = new Swiper('.swiper', {
-          navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev'
-          },
-          pagination: { el: '.swiper-pagination' },
-          allowTouchMove: false,
-          direction: 'horizontal',
-          loop: false
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        },
+        pagination: { el: '.swiper-pagination' },
+        allowTouchMove: false,
+        direction: 'horizontal',
+        loop: false
       });
 
       this.hideLoading();
@@ -137,13 +141,21 @@
 
       divTop.innerHTML = `
           <div class="d-flex flex-column justify-content-center">
-            <div class="circleimg h40 w40">${writerImg}</div>
+            <div class="circleimg h40 w40 pointer feedWin">${writerImg}</div>
           </div>
           <div class="p-3 flex-grow-1">
-            <div><sapn class="pointer" onclick="moveToProfile(${item.iuser});">${item.writer}</sapn> - ${regDtInfo}</div>
+            <div><sapn class="bold pointer feedwin">${item.writer}</sapn></div>
             <div>${item.location === null ? '' : item.location}</div>
           </div>
-        `;
+      `;
+
+      const feedwinList = divTop.querySelectorAll('.feedwin');
+      feedwinList.forEach(el => {
+        el.addEventListener('click', () => {
+          moveToFeedWin(item.iuser);
+        });
+      });
+
       const divImgSwiper = document.createElement('div');
       divContainer.appendChild(divImgSwiper);
       divImgSwiper.className = 'swiper item_img';
@@ -175,6 +187,34 @@
       divBtns.appendChild(heartIcon);
       heartIcon.className = 'fa-heart pointer rem1_5 me-3 ';
       heartIcon.classList.add(item.isFav === 1 ? 'fas' : 'far');
+      heartIcon.addEventListener('click', e => {
+
+        let method = 'POST';
+        if(item.isFav === 1) { //delete (1은 0으로 바꿔줘야 함)
+            method = 'DELETE';
+        }
+
+        fetch(`/feed/fav/${item.ifeed}`, {
+            'method': method,
+        }).then(res => res.json())
+        .then(res => {                    
+            if(res.result) {
+                item.isFav = 1 - item.isFav; // 0 > 1, 1 > 0
+                if(item.isFav === 0) { // 좋아요 취소
+                    heartIcon.classList.remove('fas');
+                    heartIcon.classList.add('far');
+                } else { // 좋아요 처리
+                    heartIcon.classList.remove('far');
+                    heartIcon.classList.add('fas');
+                }
+            } else {
+                alert('좋아요를 할 수 없습니다.');
+            }
+        })
+        .catch(e => {
+            alert('네트워크에 이상이 있습니다.');
+        });
+    });
 
       const divDm = document.createElement('div');
       divBtns.appendChild(divDm);
@@ -191,10 +231,13 @@
 
       if (item.favCnt > 0) { divFav.classList.remove('d-none'); }
 
-      if(item.ctnt !== null && item.ctnt !== '') {
+      if (item.ctnt !== null && item.ctnt !== '') {
         const divCtnt = document.createElement('div');
         divContainer.appendChild(divCtnt);
-        divCtnt.innerText = item.ctnt;
+        divCtnt.innerHTML = `
+        <span class="bold pointer feedwin">${item.writer}</span>
+        <span>${item.ctnt}</span>
+        `;
         divCtnt.className = 'itemCtnt p-3';
       }
 
@@ -203,12 +246,13 @@
 
       const divCmt = document.createElement('div');
       divContainer.appendChild(divCmt);
+      divCmt.innerHTML = `<div class="p-3 date_font">${regDtInfo}</div>`;
       const divCmtForm = document.createElement('div');
       divCmtForm.className = 'd-flex flex-row p-2'
       divCmt.appendChild(divCmtForm);
 
       divCmtForm.innerHTML = `
-        <input type="text" class="flex-grow-1 my_input back_color" placeholder="댓글을 입력하세요...">
+        <input type="text" class="flex-grow-1 my_input back_color p-2" placeholder="댓글을 입력하세요...">
         <button type="button" class="btn btn-outline-primary">등록</button>
       `;
 
