@@ -13,7 +13,7 @@
     foreach ($this->css as $item) {
       $href = strpos($item, "http") === 0 ? $item : "/static/css/{$item}.css";
       echo "<link rel='stylesheet' href='{$href}'>";
-    }
+    } // http로 시작하면 그대로 href에 그대로 넣고 http로 시작하지 않으면 /static/css/{$item}.css 의 item에 넣어줌
   }
 
   if (isset($this->js)) {
