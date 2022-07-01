@@ -15,12 +15,12 @@ class UserController extends Controller {
         $param = ["email" => $email];
         $dbUser = $this->model->selUser($param);
         /* 
-                if($dbUser === false) {
-                    return "redirect:signin";
-                } else if(!password_verify($pw, $dbUser->pw)) {
-                    return "redirect:signin";
-                }
-                 */
+        if($dbUser === false) {
+          return "redirect:signin";
+        } else if(!password_verify($pw, $dbUser->pw)) {
+          return "redirect:signin";
+        }
+          */
         if (!$dbUser || !password_verify($pw, $dbUser->pw)) {
           return "redirect:signin?email={$email}&err"; // key값은 있지만 value값이 없는 쿼리스트링
         }
