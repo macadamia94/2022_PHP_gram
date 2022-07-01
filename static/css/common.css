@@ -1,7 +1,10 @@
 @charset "utf-8";
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
-
+* {
+    --ig-error-or-destructive: 237,73,86;
+    --primary-button: 0,149,246
+}
 * { padding: 0; margin: 0; border: 0; box-sizing: border-box; }
 a { text-decoration: none; }
 blockquote, q { quotes: none; }
@@ -14,6 +17,8 @@ table { border-collapse: collapse; border-spacing: 0; }
 
 .back_color { background-color: #fafafa; }
 .bold { font-weight: bold; }
+.c_error-or-destructive { color: rgb(var(--ig-error-or-destructive)); }
+.c_primary-button { color: rgb(var(--primary-button)); }
 .circleimg { display: inline-block; overflow: hidden; border-radius: 50%; border: 1px solid #ecf0f1; }
 .circleimg > img { width: 100%; height: 100%; object-fit: cover; }
 .d-none { display: none !important; }
@@ -56,5 +61,9 @@ table { border-collapse: collapse; border-spacing: 0; }
 .modal_close_parent { display: flex; justify-content: flex-end; padding: 40px 60px; }
 .modal_close { color: white; font-size: 50px; cursor: pointer; }
 .profile { object-fit: cover; border-radius: 50%; }
-
+.text_center { text-align: center; }
 .scroll_smooth { scroll-behavior: smooth; }
+
+nav { display: flex; }
+nav div { justify-content: center; align-items: center; }
+nav a { display: flex; justify-content: center; align-items: center; }
