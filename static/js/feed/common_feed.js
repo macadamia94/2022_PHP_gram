@@ -145,8 +145,22 @@ const feedObj = {
     heartIcon.addEventListener('click', e => {
 
       let method = 'POST';
+      console.log(item.isFav);
+
+      if (item.isFav === 0) {
+        divFav.classList.remove('d-none');
+
+        item.favCnt = item.favCnt + 1;
+        spanFavCnt.innerHTML = `좋아요 ${item.favCnt}개`;
+      }
       if (item.isFav === 1) { //delete (1은 0으로 바꿔줘야 함)
         method = 'DELETE';
+        divFav.classList.remove('d-none');
+        item.favCnt = item.favCnt - 1;
+        spanFavCnt.innerHTML = `좋아요 ${item.favCnt}개`;
+        if (item.favCnt === 0) {
+          divFav.classList.add('d-none');
+        }
       }
 
       fetch(`/feed/fav/${item.ifeed}`, {
