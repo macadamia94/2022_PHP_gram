@@ -2,9 +2,9 @@
 
 namespace application\controllers;
 
-class Controller
-{
-  protected $model;
+class Controller {
+  protected $ctx;
+  protected $model; // UserController, FeedController 둘 다의 부모이기 때문에 static을 붙이면 문제가 발생할 가능성이 있음
   private static $needLoginUrlArr = [
     "feed",
     "user/feedwin"
@@ -17,9 +17,9 @@ class Controller
     $urlPaths = getUrl();
     foreach (static::$needLoginUrlArr as $url) {
       if (strpos($urlPaths, $url) === 0 && !isset($_SESSION[_LOGINUSER])) {
+        //echo "권한이 없습니다.";
+        //exit();
         $this->getView("redirect:/user/signin");
-        // echo "권한이 없습니다.";
-        // exit();
       }
     }
 
@@ -37,7 +37,9 @@ class Controller
       echo json_encode($view);
     }
   }
-  private function chkLoginUrl() {
+
+  protected function getModel($key) {
+
   }
 
   protected function addAttribute($key, $val) {

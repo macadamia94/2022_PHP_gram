@@ -11,9 +11,11 @@ class Application {
 
   public $controller;
   public $action;
-  private static $modelList = [];
+  private static $modelList = []; // static이 붙으면 굳이 객체화를 할 필요없다 class Application과 
+  // static $modelList은 엄밀히 따지면 관계는 없지만 $modelList 에 접근할 때 Application 이 사용됨
+  // 변수하나가 할당되고 메모리가 계속 유지됨 (싱글톤)
 
-  public function __construct() {
+  public function __construct() { // 생성자 함수는 객체가 생성되면 무조선 실행됨
     $urlPaths = getUrlPaths();
     $controller = isset($urlPaths[0]) && $urlPaths[0] != '' ? $urlPaths[0] : 'board';
     $action = isset($urlPaths[1]) && $urlPaths[1] != '' ? $urlPaths[1] : 'index';
@@ -23,13 +25,16 @@ class Application {
       exit();
     }
 
-    if (!in_array($controller, static::$modelList)) {
-      $modelName = 'application\models\\' . $controller . 'model';
-      static::$modelList[$controller] = new $modelName();
-    }
-
-    $controllerName = 'application\controllers\\' . $controller . 'controller';
-    $model = static::$modelList[$controller];
+    $controllerName = 'application\controllers\\' . $controller . 'controller';                
+    $model = $this->getModel($controller);
     new $controllerName($action, $model);
+  }
+
+  public static function getModel($key) {
+    if(!in_array($key, static::$modelList)) {
+        $modelName = 'application\models\\' . $key . 'model';
+        static::$modelList[$key] = new $modelName();
+    } // feed가 있다면 그냥 넘겨주고 feed가 없다면 객체화를 한 후에 넘겨줌
+    return static::$modelList[$key];
   }
 }

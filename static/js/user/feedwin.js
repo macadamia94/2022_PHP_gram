@@ -1,3 +1,25 @@
+const url = new URL(location.href);
+
+function getFeedList() {    
+  if(!feedObj) { return; }
+  feedObj.showLoading();            
+  const param = {
+    page: feedObj.currentPage++,        
+    iuser: parseInt(url.searchParams.get('iuser'))
+  }
+  console.log(param);
+  fetch('/user/feed' + encodeQueryString(param))
+  .then(res => res.json())
+  .then(list => {                
+      feedObj.makeFeedList(list);                
+  })
+  .catch(e => {
+      console.error(e);
+      feedObj.hideLoading();
+  });
+}
+getFeedList();
+
 (function () {
   const gData = document.querySelector('#gData');
 
