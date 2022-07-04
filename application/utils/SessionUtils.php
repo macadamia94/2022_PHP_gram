@@ -1,14 +1,14 @@
 <?php
-session_start();
+    session_start();
 
-function getLoginUser() {
-  return $_SESSION[_LOGINUSER];
-}
+    function getLoginUser() {
+        return $_SESSION[_LOGINUSER];
+    }
 
-function getIuser() {
-  return getLoginUser()->iuser;
-}
+    function getIuser() {
+        return getLoginUser()->iuser;
+    }
 
-function getMainimgSrc() {
-  return getIuser() . "/" . getLoginUser()->mainimg;
-}
+    function getMainImgSrc() {
+        return getIuser() . "/" . getLoginUser()->mainimg;
+    }

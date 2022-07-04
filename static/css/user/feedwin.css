@@ -1,22 +1,28 @@
-.modal-title { padding: 1rem; }
-
-.modal-content { border-radius: .7rem; }
-
-@media (min-width: 576px) {
-  .modal-dialog {
-    max-width: 450px;
-  }
+#changeProfileModalContent {
+  border-radius: 0.7rem;
 }
-
-._modal_item {
+.blue {
+  color: #3596f9;
+}
+.red {
+  color: #e44753;
+}
+.modal-title {
+  height: 80px;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  flex-shrink: 0;
   align-items: center;
-  padding: 0.75rem;
 }
-
-._modal_item:not(:last-child) {
+.modal-body:not(:last-child) {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-bottom: 1px solid #dee2e6;
+}
+.modal-body > p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
 }

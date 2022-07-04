@@ -1,10 +1,45 @@
-
-main { 
-  background-color: rgb(250, 250, 250); 
-  --font : Arial
+main {
+  background-color: rgb(250, 250, 250);
+  --font: Arial;
 }
-.fas { color: #ea4040; }
-.w100p_mw614 { width: 100%; max-width: 614px; }
-#item_container > .item { border: 1px solid #dfdfdf; border-radius: 8px; background-color: #fff;
-font-family: var(--font) }
-.date_font{ font-size: small; color: #727272;}
+/* 네이밍을 아래 w100p_mw614로 변경 .item_container_parent { width: 100%; max-width: 614px; } */
+.fas {
+  color: #ea4040;
+}
+.w100p_mw614 {
+  width: 100%;
+  max-width: 614px;
+  /* max-height: 500px;
+  object-fit: contain; */
+}
+#item_container > .item {
+  border: 1px solid #dfdfdf;
+  border-radius: 8px;
+  background-color: #fff;
+  font-family: var(--font);
+}
+.img_modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.regdt {
+  margin: 10px;
+  font-size: 0.8rem;
+  color: #a8a8a8;
+}
+.img-modal-content {
+  background-color: rgba(0, 0, 0, 0.87);
+  animation: slide-top 0.5s ease-in-out both;
+}
+
+@keyframes slide-top {
+  0% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

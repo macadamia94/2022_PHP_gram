@@ -156,6 +156,26 @@ const feedObj = {
           <input type="text" class="flex-grow-1 my_input back_color p-2" placeholder="댓글을 입력하세요...">
           <button type="button" class="btn btn-outline-primary">등록</button>
       `;
+      const inputCmt = divCmtForm.querySelector('input');
+      const btnCmtReg = divCmtForm.querySelector('button');
+      btnCmtReg.addEventListener('click', e => {
+        const param = {
+          ifeed: item.ifeed,
+          cmt: inputCmt.value
+        };
+        fetch('/feedcmt/index', {
+          method: 'POST',
+          body: JSON.stringify(param)
+        })
+        .then(res => res.json())
+        .then(res => {
+          console.log('icmt :' + res.result);
+          if(res.result) {
+            inputCmt.value = '';
+            // 댓글 공간에 댓글 내용 추가
+          }
+        })
+      });
 
     return divContainer;
   },

@@ -1,15 +1,17 @@
 function getFeedList() {
-  if (!feedObj) { return; }
+  if (!feedObj) {
+    return;
+  }
   feedObj.showLoading();
   const param = {
-    page: feedObj.currentPage++
-  }
+    page: feedObj.currentPage++,
+  };
   fetch('/feed/rest' + encodeQueryString(param))
-    .then(res => res.json())
-    .then(list => {
+    .then((res) => res.json())
+    .then((list) => {
       feedObj.makeFeedList(list);
     })
-    .catch(e => {
+    .catch((e) => {
       console.error(e);
       feedObj.hideLoading();
     });

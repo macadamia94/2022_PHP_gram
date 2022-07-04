@@ -1,105 +1,102 @@
 <?php
-
 namespace application\controllers;
 
 use application\libs\Application;
 
 class UserController extends Controller {
 
-  // 로그인
-  public function signin() {
-    switch (getMethod()) {
-      case _GET:
-        return "user/signin.php";
-      case _POST:
-        $email = $_POST["email"];
-        $pw = $_POST["pw"];
-        $param = ["email" => $email];
-        $dbUser = $this->model->selUser($param);
-        /* 
-        if($dbUser === false) {
-          return "redirect:signin";
-        } else if(!password_verify($pw, $dbUser->pw)) {
-          return "redirect:signin";
-        }
-          */
-        if (!$dbUser || !password_verify($pw, $dbUser->pw)) {
-          return "redirect:signin?email={$email}&err"; // key값은 있지만 value값이 없는 쿼리스트링
-        }
-        $dbUser->pw = null; // 메모리 차지하고 있기 때문에 필요없는 값은 지워주는 것이 좋음
-        $dbUser->regdt = null;
-        $this->flash(_LOGINUSER, $dbUser);
-        return "redirect:/feed/index";
+    //로그인
+    public function signin() {        
+        switch(getMethod()) {
+            case _GET:
+                return "user/signin.php";
+            case _POST:
+                $email = $_POST["email"];
+                $pw = $_POST["pw"];
+                $param = [ "email" => $email ];
+                $dbUser = $this->model->selUser($param);
+                if(!$dbUser || !password_verify($pw, $dbUser->pw)) {                                                        
+                    return "redirect:signin?email={$email}&err";
+                }
+                $dbUser->pw = null;
+                $dbUser->regdt = null;
+                $this->flash(_LOGINUSER, $dbUser);
+                return "redirect:/feed/index";
+            }
     }
-    return "user/signin.php";
-  }
 
-  // 회원가입
-  public function signup() {
-    switch (getMethod()) {
-      case _GET:
-        return "user/signup.php";
-      case _POST:
+    //회원가입
+    public function signup() {
+        switch(getMethod()) {
+            case _GET:
+                return "user/signup.php";
+            case _POST:
+                $email = $_POST["email"];
+                $pw = $_POST["pw"];
+                $hashedPw = password_hash($pw, PASSWORD_BCRYPT);
+                $nm = $_POST["nm"];
+                $param = [
+                    "email" => $email,
+                    "pw" => $hashedPw,
+                    "nm" => $nm
+                ];
+
+                $this->model->insUser($param);
+
+                return "redirect:signin";
+        }
+    }
+
+    public function logout() {
+        $this->flash(_LOGINUSER);
+        return "redirect:/user/signin";
+    }
+
+    public function feedwin() {
+        $iuser = isset($_GET["iuser"]) ? intval($_GET["iuser"]) : 0;
+        $param = [ "feediuser" => $iuser, "loginiuser" => getIuser() ];
+        $this->addAttribute(_DATA, $this->model->selUserProfile($param));
+        
+        $this->addAttribute(_JS, ["user/feedwin", "https://unpkg.com/swiper@8/swiper-bundle.min.js"]);
+        $this->addAttribute(_CSS, ["user/feedwin", "https://unpkg.com/swiper@8/swiper-bundle.min.css", "feed/index"]);        
+        $this->addAttribute(_MAIN, $this->getView("user/feedwin.php"));
+        return "template/t1.php"; 
+    }
+
+    public function feed() {
+        if(getMethod() === _GET) {    
+            $page = 1;
+            if(isset($_GET["page"])) {
+                $page = intval($_GET["page"]);
+            }
+            $startIdx = ($page - 1) * _FEED_ITEM_CNT;
+            $iuser = isset($_GET["iuser"]) ? intval($_GET["iuser"]) : 0;
+            $param = [
+                "startIdx" => $startIdx,
+                "iuser" => getIuser(),
+                "feediuser" => $iuser,
+            ];        
+            $list = $this->model->selFeedList($param);
+            foreach($list as $item) {                 
+                $item->imgList = Application::getModel("feed")->selFeedImgList($item);
+            }
+            return $list;
+        }
+    }
+
+    public function follow() {
         $param = [
-          "email" => $_POST['email'],
-          "pw" => $_POST['pw'],
-          "nm" => $_POST['nm'],
+            "fromiuser" => getIuser()
         ];
-        $param["pw"] = password_hash($param["pw"], PASSWORD_BCRYPT);
-        $this->model->insUser($param);
-        return "redirect:signin";
-    }
-  }
 
-  // 로그아웃
-  public function logout() {
-    $this->flash(_LOGINUSER);
-    return "redirect:/user/signin";
-  }
-
-  public function feedwin() {
-    $iuser = isset($_GET["iuser"]) ? intval($_GET["iuser"]) : 0;
-    $param = ["feediuser" => $iuser, "loginiuser" => getIuser()];
-    $this->addAttribute(_DATA, $this->model->selUserProfile($param));
-    $this->addAttribute(_JS, ["user/feedwin", "https://unpkg.com/swiper@8/swiper-bundle.min.js"]);
-    $this->addAttribute(_CSS, ["user/feedwin", "https://unpkg.com/swiper@8/swiper-bundle.min.css", "feed/index"]);    
-    $this->addAttribute(_MAIN, $this->getView("user/feedwin.php"));
-    return "template/t1.php";
-  }
-
-  public function feed() {
-  if(getMethod() === _GET) {    
-    $page = 1;
-    if(isset($_GET["page"])) {
-        $page = intval($_GET["page"]);
+        switch(getMethod()) {
+            case _POST:                                
+                $json = getJson();
+                $param["toiuser"] = $json["toiuser"];
+                return [_RESULT => $this->model->insUserFollow($param)];
+            case _DELETE:        
+                $param["toiuser"] = $_GET["toiuser"];
+                return [_RESULT => $this->model->delUserFollow($param)];
+        }
     }
-    $startIdx = ($page - 1) * _FEED_ITEM_CNT;
-    $param = [
-        "startIdx" => $startIdx,
-        "iuser" => $_GET["iuser"]
-    ];        
-    $list = $this->model->selFeedList($param);
-    foreach($list as $item) {                 
-        $item->imgList = Application::getModel("feed")->selFeedImgList($item);
-    }
-    return $list;
-  }
-}
-
-  // 팔로우
-  public function follow() {
-    // toIuser → 나의 iuser는 이미 로그인 상태기 때문에 필요X, 상대방 iuser만 있으면 OK
-    $param = [
-      "fromiuser" => getIuser(), 
-    ];
-    switch(getMethod()) {
-      case _POST:
-        $json = getJson();
-        $param["toiuser"] = $json["toiuser"];
-        return [_RESULT => $this->model->insUserFollow($param)];
-      case _DELETE:
-        $param["toiuser"] = $_GET["toiuser"];
-        return [_RESULT => $this->model->delUserFollow($param)];
-    }
-  }
 }
