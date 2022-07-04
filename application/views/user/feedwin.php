@@ -1,3 +1,4 @@
+<div id="gData" data-toiuser="<?=$this->data->iuser?>"></div>
 <div class="d-flex flex-column align-items-center">
   <div class="size_box_100"></div>
   <div class="w100p_mw614">
@@ -38,7 +39,7 @@
             } else if($this->data->youme === 1 && $this->data->meyou === 0) {
               $txt = "맞팔로우 하기";
             }
-            echo "<button type='button' id='btnFllow' data-follow='{$data_follow}' class='btn {$cls}'>{$txt}</button>";
+            echo "<button type='button' id='btnFollow' data-youme='{$this->data->youme}' data-follow='{$data_follow}' class='btn {$cls}'>{$txt}</button>";
           }
         ?>
         </div>

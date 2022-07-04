@@ -57,11 +57,28 @@ class UserController extends Controller {
 
   public function feedwin() {
     $iuser = isset($_GET["iuser"]) ? intval($_GET["iuser"]) : 0;
-    $param = [ "feediuser" => $iuser, "loginiuser" => getIuser() ];
+    $param = ["feediuser" => $iuser, "loginiuser" => getIuser()];
     $this->addAttribute(_DATA, $this->model->selUserProfile($param));
-    $this->addAttribute(_JS, ["user/feedwin", "https://unpkg.com/swiper@8/swiper-bundle.min.js"]);        
-    $this->addAttribute(_CSS, ["user/feedwin", "https://unpkg.com/swiper@8/swiper-bundle.min.css"]);        
+    $this->addAttribute(_JS, ["user/feedwin", "https://unpkg.com/swiper@8/swiper-bundle.min.js"]);
+    $this->addAttribute(_CSS, ["user/feedwin", "https://unpkg.com/swiper@8/swiper-bundle.min.css"]);
     $this->addAttribute(_MAIN, $this->getView("user/feedwin.php"));
-    return "template/t1.php"; 
-}
+    return "template/t1.php";
+  }
+
+  // 팔로우
+  public function follow() {
+    // toIuser → 나의 iuser는 이미 로그인 상태기 때문에 필요X, 상대방 iuser만 있으면 OK
+    $param = [
+      "fromiuser" => getIuser(), 
+    ];
+    switch(getMethod()) {
+      case _POST:
+        $json = getJson();
+        $param["toiuser"] = $json["toiuser"];
+        return [_RESULT => $this->model->insUserFollow($param)];
+      case _DELETE:
+        $param["toiuser"] = $_GET["toiuser"];
+        return [_RESULT => $this->model->delUserFollow($param)];
+    }
+  }
 }
