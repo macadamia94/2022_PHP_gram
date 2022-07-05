@@ -33,6 +33,16 @@ main {
   animation: slide-top 0.5s ease-in-out both;
 }
 
+.date_font {
+  font-size: small;
+  color: #a8a8a8;
+}
+
+.cmt_date_font {
+  font-size: small;
+  color: #a8a8a8;
+}
+
 @keyframes slide-top {
   0% {
     transform: translateY(100px);

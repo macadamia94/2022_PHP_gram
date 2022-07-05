@@ -5,19 +5,41 @@ const feedObj = {
   swiper: null,
   loadingElem: document.querySelector('.loading'),
   containerElem: document.querySelector('#item_container'),
+  getFeedCmtList: function(ifeed, divCmtList, spanMoreCmt) {
+    fetch(`/feedcmt/index?ifeed=${ifeed}`)
+    .then(res => res.json())
+    .then(res => {
+      if(res && res.length > 0) {
+        if(spanMoreCmt) {spanMoreCmt.remove();}
+        divCmtList.innerHTML = null;
+        res.forEach(item => {
+          const divCmtItem = this.makeCmtItem(item);
+          divCmtList.appendChild(divCmtItem);
+        })
+      }
+    });
+  },
   makeCmtItem: function (item) {
     const divCmtItemContainer = document.createElement('div');
     divCmtItemContainer.className = 'd-flex flex-row align-items-center mb-2';
     const src = '/static/img/profile/' + (item.writerimg ? `${item.iuser}/${item.writerimg}` : 'defaultProfileImg_100.png');
     divCmtItemContainer.innerHTML = `
-          <div class="circleimg h24 w24 me-1">
+          <div class="circleimg h24 w24 me-1 cmtFeedwinList">
               <img src="${src}" class="profile w24 pointer">                
           </div>
-          <div class="d-flex flex-row">
-              <div class="pointer me-2">${item.writer} - ${getDateTimeInfo(item.regdt)}</div>
-              <div>${item.cmt}</div>
+          <div class="d-flex flex-row cmtFeedwinList">
+          <div class="pointer me-2 bold">${item.writer}</div>
+              <div>${item.cmt}</div><span class="rem0_8 ms-2 cmt_date_font">${getDateTimeInfo(item.regdt)}</span>
           </div>
       `;
+
+    const cmtFeedwinList = divCmtItemContainer.querySelectorAll('.cmtFeedwinList');
+    cmtFeedwinList.forEach(el => {
+      el.addEventListener('click', () => {
+        moveToFeedWin(item.iuser);
+      });
+    });
+
     return divCmtItemContainer;
   },
   makeFeedList: function (list) {
@@ -165,6 +187,8 @@ const feedObj = {
     divCmt.innerHTML = `<div class="p-3 date_font">${regDtInfo}</div>`;
     divContainer.appendChild(divCmt);
 
+    const spanMoreCmt = document.createElement('sapn');
+
     if(item.cmt) {
       const divCmtItem = this.makeCmtItem(item.cmt);
       divCmtList.appendChild(divCmtItem);
@@ -172,18 +196,15 @@ const feedObj = {
       if(item.cmt && item.cmt.ismore === 1) {
         const divMoreCmt = document.createElement('div');
         divCmt.appendChild(divMoreCmt);
-        divMoreCmt.className = 'ms-3';
+        divMoreCmt.className = 'ms-3 mb-3';
         
-        const spanMoreCmt = document.createElement('sapn');
         divMoreCmt.appendChild(spanMoreCmt);
-        spanMoreCmt.className = 'pointer';
+        spanMoreCmt.className = 'pointer rem0_9 c_lightgray';
         spanMoreCmt.innerText = '댓글 더보기..';
         spanMoreCmt.addEventListener('click', e => {
-  
+          this.getFeedCmtList(item.ifeed, divCmtList, spanMoreCmt);
         });
-
       }
-
     }
 
     const divCmtForm = document.createElement('div');
@@ -194,25 +215,32 @@ const feedObj = {
           <input type="text" class="flex-grow-1 my_input back_color p-2" placeholder="댓글을 입력하세요...">
           <button type="button" class="btn btn-outline-primary">등록</button>
       `;
+
       const inputCmt = divCmtForm.querySelector('input');
+      inputCmt.addEventListener('keyup', e => {
+        if(e.key === 'Enter') {
+        btnCmtReg.click();
+        }
+      })
       const btnCmtReg = divCmtForm.querySelector('button');
       btnCmtReg.addEventListener('click', e => {
         const param = {
           ifeed: item.ifeed,
           cmt: inputCmt.value
         };
-        fetch('/feedcmt/index', {
+        fetch('/feedcmtfeedwin/index', {
           method: 'POST',
           body: JSON.stringify(param)
         })
         .then(res => res.json())
         .then(res => {
-          console.log('icmt :' + res.result);
           if(res.result) {
             inputCmt.value = '';
             // 댓글 공간에 댓글 내용 추가
+            this.getFeedCmtList(param.ifeed, divCmtList, spanMoreCmt);
           }
-        })
+        });
+        this.insFeedCmt(param, inputCmt, divCmtList, spanMoreCmt);
       });
 
     return divContainer;
@@ -275,7 +303,7 @@ function moveToFeedWin(iuser) {
           fData.append('location', body.querySelector('input[type=text]').value);
 
           fetch('/feed/rest', {
-            method: 'post',
+            method: 'POST',
             body: fData
           }).then(res => res.json())
             .then(myJson => {
