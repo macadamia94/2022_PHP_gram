@@ -3,6 +3,19 @@ const feedObj = {
   itemLength: 0,
   currentPage: 1,
   swiper: null,
+  refreshSwipe: function() {
+    if(this.swiper !== null) { this.swiper = null; }
+    this.swiper = new Swiper('.swiper', {
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+        },
+        pagination: { el: '.swiper-pagination' },
+        allowTouchMove: false,
+        direction: 'horizontal',
+        loop: false
+    });
+  },
   loadingElem: document.querySelector('.loading'),
   containerElem: document.querySelector('#item_container'),
   getFeedCmtList: function(ifeed, divCmtList, spanMoreCmt) {
@@ -49,19 +62,7 @@ const feedObj = {
         this.containerElem.appendChild(divItem);
       });
     }
-
-    if (this.swiper !== null) { this.swiper = null; }
-    this.swiper = new Swiper('.swiper', {
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
-      },
-      pagination: { el: '.swiper-pagination' },
-      allowTouchMove: false,
-      direction: 'horizontal',
-      loop: false
-    });
-
+    this.refreshSwipe();
     this.hideLoading();
   },
   makeFeedItem: function (item) {
@@ -219,28 +220,26 @@ const feedObj = {
       const inputCmt = divCmtForm.querySelector('input');
       inputCmt.addEventListener('keyup', e => {
         if(e.key === 'Enter') {
-        btnCmtReg.click();
+            btnCmtReg.click();
         }
-      })
+      });
       const btnCmtReg = divCmtForm.querySelector('button');
       btnCmtReg.addEventListener('click', e => {
         const param = {
           ifeed: item.ifeed,
           cmt: inputCmt.value
         };
-        fetch('/feedcmtfeedwin/index', {
+        fetch('/feedcmt/index', {
           method: 'POST',
           body: JSON.stringify(param)
-        })
-        .then(res => res.json())
-        .then(res => {
+      })
+      .then(res => res.json())
+      .then(res => {            
           if(res.result) {
-            inputCmt.value = '';
-            // 댓글 공간에 댓글 내용 추가
-            this.getFeedCmtList(param.ifeed, divCmtList, spanMoreCmt);
+              inputCmt.value = '';                    
+              this.getFeedCmtList(param.ifeed, divCmtList, spanMoreCmt);
           }
         });
-        this.insFeedCmt(param, inputCmt, divCmtList, spanMoreCmt);
       });
 
     return divContainer;
@@ -309,8 +308,16 @@ function moveToFeedWin(iuser) {
             .then(myJson => {
               console.log(myJson);
 
-              if (myJson.result) {
+              if (myJson) {
                 btnClose.click();
+
+                const lData = document.querySelector('#lData');
+                const gData = document.querySelector('#gData');
+                if(lData && lData.dataset.toiuser !== gData.dataset.loginiuser) { return; }
+                // 남의 feedWin이 아니라면 화면에 등록!!!
+                const feedItem = feedObj.makeFeedItem(myJson);
+                feedObj.containerElem.prepend(feedItem);
+                feedObj.refreshSwipe();
               }
             });
 

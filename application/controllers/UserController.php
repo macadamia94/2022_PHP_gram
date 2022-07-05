@@ -64,27 +64,25 @@ class UserController extends Controller {
     }
 
     public function feed() {
-        if(getMethod() === _GET) {    
-            $page = 1;
-            if(isset($_GET["page"])) {
-                $page = intval($_GET["page"]);
-            }
-            $startIdx = ($page - 1) * _FEED_ITEM_CNT;
-            $iuser = isset($_GET["iuser"]) ? intval($_GET["iuser"]) : 0;
-            $param = [
-                "startIdx" => $startIdx,
-                "iuser" => getIuser(),
-                "feediuser" => $iuser,
-            ];        
-            $list = $this->model->selFeedList($param);
-            foreach($list as $item) {                 
-                $item->imgList = Application::getModel("feed")->selFeedImgList($item);
-                $param2 = ["ifeed" => $item->ifeed];
-                $item->cmt = Application::getModel("feedcmt")->selFeedCmt($param2);
-            }
-            return $list;
-        }
+    if(getMethod() === _GET) {    
+      $page = 1;
+      if(isset($_GET["page"])) {
+          $page = intval($_GET["page"]);
+      }
+      $startIdx = ($page - 1) * _FEED_ITEM_CNT;
+      $param = [
+        "startIdx" => $startIdx,
+        "toiuser" => $_GET["iuser"],
+        "loginiuser" => getIuser()
+    ];      
+      $list = $this->model->selFeedList($param);
+      foreach($list as $item) {  
+          $param2 = [ "ifeed" => $item->ifeed ];
+          $item->imgList = Application::getModel("feed")->selFeedImgList($param2);
+      }
+      return $list;
     }
+  }
 
     public function follow() {
         $param = [

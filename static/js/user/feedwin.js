@@ -1,36 +1,31 @@
 const url = new URL(location.href);
-function getFeedList() {
-  if (!feedObj) {
-    return;
-  }
-  const urlParams = url.searchParams;
-
-  feedObj.showLoading();
-  // const iuser = location.search.split('?iuser=');
+function getFeedList() {    
+  if(!feedObj) { return; }
+  feedObj.showLoading();            
   const param = {
-    page: feedObj.currentPage++,
-    iuser: urlParams.get('iuser'),
-  };
-  fetch('/user/feed' + encodeQueryString(param) + location.search)
-    .then((res) => res.json())
-    .then((list) => {
-      feedObj.makeFeedList(list);
-    })
-    .catch((e) => {
-      console.error(e);
-      feedObj.hideLoading();
-    });
+    page: feedObj.currentPage++,        
+    iuser: url.searchParams.get('iuser')
+  }
+  fetch('/user/feed' + encodeQueryString(param))
+  .then(res => res.json())
+  .then(list => {                
+    feedObj.makeFeedList(list);                
+  })
+  .catch(e => {
+    console.error(e);
+    feedObj.hideLoading();
+  });
 }
 getFeedList();
 
 (function () {
-  const gData = document.querySelector('#gData');
+  const lData = document.querySelector('#lData');
 
   const btnFollow = document.querySelector('#btnFollow');
   if (btnFollow) {
     btnFollow.addEventListener('click', function () {
       const param = {
-        toiuser: parseInt(gData.dataset.toiuser),
+        toiuser: parseInt(lData.dataset.toiuser)
       };
       console.log(param);
       const follow = btnFollow.dataset.follow;
