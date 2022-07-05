@@ -4,7 +4,7 @@
             <div class="d-flex flex-row align-items-center">
                 <div class="d-inline-flex flex-grow-1 flex-shrink-0">
                     <a href="/feed/index">
-                        <img class="w100" src="/static/svg/logo.svg">
+                        <img class="w100" src="/static/svg/Instagram_logo.svg">
                     </a>
                 </div>
 
