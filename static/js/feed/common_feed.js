@@ -1,6 +1,6 @@
 const feedObj = {
   // 멤버 필드
-  limit: 20,
+  limit: 10,
   itemLength: 0,
   currentPage: 1,
   swiper: null,
@@ -10,6 +10,8 @@ const feedObj = {
   // 멤버 메소드
   setScrollInfinity: function() {
     window.addEventListener('scroll', e => {
+      if(this.isLoading()) { return; }
+
       const {
           scrollTop,
           scrollHeight,
@@ -295,7 +297,8 @@ const feedObj = {
   },
 
   showLoading: function () { this.loadingElem.classList.remove('d-none'); },
-  hideLoading: function () { this.loadingElem.classList.add('d-none'); }
+  hideLoading: function () { this.loadingElem.classList.add('d-none'); },
+  isLoading: function() { return !this.loadingElem.classList.contains('d-none'); }
 
 }
 

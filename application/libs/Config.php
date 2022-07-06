@@ -30,5 +30,5 @@
     define("_DELETE", "DELETE");
 
     define("_IMG_PATH", "static/img");
-    define("_FEED_ITEM_CNT", 20);
+    define("_FEED_ITEM_CNT", 10);
     
