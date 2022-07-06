@@ -1,4 +1,11 @@
-const url = new URL(location.href);
+if(feedObj) {
+  const url = new URL(location.href);
+  feedObj.iuser = parseInt(url.searchParams.get('iuser'));
+  feedObj.getFeedUrl = '/user/feed';
+  feedObj.getFeedList();
+}
+
+/*
 function getFeedList() {    
   if(!feedObj) { return; }
   feedObj.showLoading();            
@@ -17,6 +24,7 @@ function getFeedList() {
   });
 }
 getFeedList();
+*/
 
 (function () {
   const spanCntFollower = document.querySelector('#spanCntFollower');

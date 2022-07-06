@@ -1,8 +1,29 @@
 const feedObj = {
+  // 멤버 필드
   limit: 20,
   itemLength: 0,
   currentPage: 1,
   swiper: null,
+  getFeedUrl: '',
+  iuser: 0,
+
+  // 멤버 메소드
+  getFeedList: function() {
+    this.showLoading();            
+    const param = {
+      page: this.currentPage++,        
+      iuser: this.iuser
+    }
+    fetch(this.getFeedUrl + encodeQueryString(param))
+    .then(res => res.json())
+    .then(list => {                
+      this.makeFeedList(list);                
+    })
+    .catch(e => {
+      console.error(e);
+      this.hideLoading();
+    });
+  },
   refreshSwipe: function () {
     if (this.swiper !== null) { this.swiper = null; }
     this.swiper = new Swiper('.swiper', {
