@@ -35,10 +35,12 @@ class UserController extends Controller {
                 $pw = $_POST["pw"];
                 $hashedPw = password_hash($pw, PASSWORD_BCRYPT);
                 $nm = $_POST["nm"];
+                $ip_addr = $_SERVER["REMOTE_ADDR"];
                 $param = [
                     "email" => $email,
                     "pw" => $hashedPw,
-                    "nm" => $nm
+                    "nm" => $nm,
+                    "ip_addr" => $ip_addr
                 ];
 
                 $this->model->insUser($param);

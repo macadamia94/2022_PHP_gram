@@ -6,13 +6,14 @@ use PDO;
 class UserModel extends Model {
     public function insUser(&$param) {
         $sql = "INSERT INTO t_user
-                ( email, pw, nm ) 
+                ( email, pw, nm, ip_addr ) 
                 VALUES 
-                ( :email, :pw, :nm )";
+                ( :email, :pw, :nm, :ip_addr )";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":email", $param["email"]);
         $stmt->bindValue(":pw", $param["pw"]);
         $stmt->bindValue(":nm", $param["nm"]);
+        $stmt->bindValue(":ip_addr", $param["ip_addr"]);
         $stmt->execute();
         return $stmt->rowCount();
 
