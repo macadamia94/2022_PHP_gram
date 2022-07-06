@@ -5,7 +5,7 @@ use application\libs\Application;
 
 class UserController extends Controller {
 
-    //로그인
+    // 로그인
     public function signin() {        
         switch(getMethod()) {
             case _GET:
@@ -25,7 +25,7 @@ class UserController extends Controller {
             }
     }
 
-    //회원가입
+    // 회원가입
     public function signup() {
         switch(getMethod()) {
             case _GET:
@@ -47,6 +47,7 @@ class UserController extends Controller {
         }
     }
 
+    // 로그아웃
     public function logout() {
         $this->flash(_LOGINUSER);
         return "redirect:/user/signin";
@@ -63,6 +64,7 @@ class UserController extends Controller {
         return "template/t1.php"; 
     }
 
+    // 피드
     public function feed() {
     if(getMethod() === _GET) {    
       $page = 1;
@@ -79,11 +81,13 @@ class UserController extends Controller {
       foreach($list as $item) {  
           $param2 = [ "ifeed" => $item->ifeed ];
           $item->imgList = Application::getModel("feed")->selFeedImgList($param2);
+          $item->cmt = Application::getModel("feedcmt")->selFeedCmt($param2);
       }
       return $list;
     }
   }
 
+  // 로그아웃
     public function follow() {
         $param = [
             "fromiuser" => getIuser()

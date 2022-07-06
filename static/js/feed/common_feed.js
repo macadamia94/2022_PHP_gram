@@ -3,56 +3,52 @@ const feedObj = {
   itemLength: 0,
   currentPage: 1,
   swiper: null,
-  refreshSwipe: function() {
-    if(this.swiper !== null) { this.swiper = null; }
+  refreshSwipe: function () {
+    if (this.swiper !== null) { this.swiper = null; }
     this.swiper = new Swiper('.swiper', {
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-        },
-        pagination: { el: '.swiper-pagination' },
-        allowTouchMove: false,
-        direction: 'horizontal',
-        loop: false
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      },
+      pagination: { el: '.swiper-pagination' },
+      allowTouchMove: false,
+      direction: 'horizontal',
+      loop: false
     });
   },
   loadingElem: document.querySelector('.loading'),
   containerElem: document.querySelector('#item_container'),
-  getFeedCmtList: function(ifeed, divCmtList, spanMoreCmt) {
+  getFeedCmtList: function (ifeed, divCmtList, spanMoreCmt) {
     fetch(`/feedcmt/index?ifeed=${ifeed}`)
-    .then(res => res.json())
-    .then(res => {
-      if(res && res.length > 0) {
-        if(spanMoreCmt) {spanMoreCmt.remove();}
-        divCmtList.innerHTML = null;
-        res.forEach(item => {
-          const divCmtItem = this.makeCmtItem(item);
-          divCmtList.appendChild(divCmtItem);
-        })
-      }
-    });
+      .then(res => res.json())
+      .then(res => {
+        if (res && res.length > 0) {
+          if (spanMoreCmt) { spanMoreCmt.remove(); }
+          divCmtList.innerHTML = null;
+          res.forEach(item => {
+            const divCmtItem = this.makeCmtItem(item);
+            divCmtList.appendChild(divCmtItem);
+          });
+        }
+      });
   },
   makeCmtItem: function (item) {
     const divCmtItemContainer = document.createElement('div');
     divCmtItemContainer.className = 'd-flex flex-row align-items-center mb-2';
     const src = '/static/img/profile/' + (item.writerimg ? `${item.iuser}/${item.writerimg}` : 'defaultProfileImg_100.png');
     divCmtItemContainer.innerHTML = `
-          <div class="circleimg h24 w24 me-1 cmtFeedwinList">
+          <div class="circleimg h24 w24 me-1">
               <img src="${src}" class="profile w24 pointer">                
           </div>
-          <div class="d-flex flex-row cmtFeedwinList">
-          <div class="pointer me-2 bold">${item.writer}</div>
-              <div>${item.cmt}</div><span class="rem0_8 ms-2 cmt_date_font">${getDateTimeInfo(item.regdt)}</span>
+          <div class="d-flex flex-row">
+              <div class="pointer me-2">${item.writer} - <span class="rem0_8">${getDateTimeInfo(item.regdt)}</span></div>
+              <div>${item.cmt}</div>
           </div>
       `;
-
-    const cmtFeedwinList = divCmtItemContainer.querySelectorAll('.cmtFeedwinList');
-    cmtFeedwinList.forEach(el => {
-      el.addEventListener('click', () => {
-        moveToFeedWin(item.iuser);
-      });
+    const img = divCmtItemContainer.querySelector('img');
+    img.addEventListener('click', e => {
+      moveToFeedWin(item.iuser);
     });
-
     return divCmtItemContainer;
   },
   makeFeedList: function (list) {
@@ -83,7 +79,7 @@ const feedObj = {
               <div class="circleimg h40 w40 pointer feedwin">${writerImg}</div>
           </div>
           <div class="p-3 flex-grow-1">
-              <div><span class="bold pointer feedwin">${item.writer}</span></div>
+              <div><span class="pointer feedwin">${item.writer}</span> - ${regDtInfo}</div>
               <div>${item.location === null ? '' : item.location}</div>
           </div>
       `;
@@ -173,10 +169,7 @@ const feedObj = {
     if (item.ctnt !== null && item.ctnt !== '') {
       const divCtnt = document.createElement('div');
       divContainer.appendChild(divCtnt);
-      divCtnt.innerHTML = `
-        <span class="bold">${item.writer}</span>
-        <span>${item.ctnt}</span>
-      `;
+      divCtnt.innerText = item.ctnt;
       divCtnt.className = 'itemCtnt p-3';
     }
 
@@ -185,20 +178,19 @@ const feedObj = {
     divCmtList.className = 'ms-3';
 
     const divCmt = document.createElement('div');
-    divCmt.innerHTML = `<div class="p-3 date_font">${regDtInfo}</div>`;
     divContainer.appendChild(divCmt);
 
-    const spanMoreCmt = document.createElement('sapn');
+    const spanMoreCmt = document.createElement('span');
 
-    if(item.cmt) {
+    if (item.cmt) {
       const divCmtItem = this.makeCmtItem(item.cmt);
       divCmtList.appendChild(divCmtItem);
-  
-      if(item.cmt && item.cmt.ismore === 1) {
+
+      if (item.cmt.ismore === 1) {
         const divMoreCmt = document.createElement('div');
         divCmt.appendChild(divMoreCmt);
         divMoreCmt.className = 'ms-3 mb-3';
-        
+
         divMoreCmt.appendChild(spanMoreCmt);
         spanMoreCmt.className = 'pointer rem0_9 c_lightgray';
         spanMoreCmt.innerText = '댓글 더보기..';
@@ -209,7 +201,7 @@ const feedObj = {
     }
 
     const divCmtForm = document.createElement('div');
-    divCmtForm.className = 'd-flex flex-row p-2';
+    divCmtForm.className = 'd-flex flex-row';
     divCmt.appendChild(divCmtForm);
 
     divCmtForm.innerHTML = `
@@ -217,30 +209,30 @@ const feedObj = {
           <button type="button" class="btn btn-outline-primary">등록</button>
       `;
 
-      const inputCmt = divCmtForm.querySelector('input');
-      inputCmt.addEventListener('keyup', e => {
-        if(e.key === 'Enter') {
-            btnCmtReg.click();
-        }
-      });
-      const btnCmtReg = divCmtForm.querySelector('button');
-      btnCmtReg.addEventListener('click', e => {
-        const param = {
-          ifeed: item.ifeed,
-          cmt: inputCmt.value
-        };
-        fetch('/feedcmt/index', {
-          method: 'POST',
-          body: JSON.stringify(param)
+    const inputCmt = divCmtForm.querySelector('input');
+    inputCmt.addEventListener('keyup', e => {
+      if (e.key === 'Enter') {
+        btnCmtReg.click();
+      }
+    });
+    const btnCmtReg = divCmtForm.querySelector('button');
+    btnCmtReg.addEventListener('click', e => {
+      const param = {
+        ifeed: item.ifeed,
+        cmt: inputCmt.value
+      };
+      fetch('/feedcmt/index', {
+        method: 'POST',
+        body: JSON.stringify(param)
       })
-      .then(res => res.json())
-      .then(res => {            
-          if(res.result) {
-              inputCmt.value = '';                    
-              this.getFeedCmtList(param.ifeed, divCmtList, spanMoreCmt);
+        .then(res => res.json())
+        .then(res => {
+          if (res.result) {
+            inputCmt.value = '';
+            this.getFeedCmtList(param.ifeed, divCmtList, spanMoreCmt);
           }
         });
-      });
+    });
 
     return divContainer;
   },
@@ -302,7 +294,7 @@ function moveToFeedWin(iuser) {
           fData.append('location', body.querySelector('input[type=text]').value);
 
           fetch('/feed/rest', {
-            method: 'POST',
+            method: 'post',
             body: fData
           }).then(res => res.json())
             .then(myJson => {
@@ -313,7 +305,7 @@ function moveToFeedWin(iuser) {
 
                 const lData = document.querySelector('#lData');
                 const gData = document.querySelector('#gData');
-                if(lData && lData.dataset.toiuser !== gData.dataset.loginiuser) { return; }
+                if (lData && lData.dataset.toiuser !== gData.dataset.loginiuser) { return; }
                 // 남의 feedWin이 아니라면 화면에 등록!!!
                 const feedItem = feedObj.makeFeedItem(myJson);
                 feedObj.containerElem.prepend(feedItem);
