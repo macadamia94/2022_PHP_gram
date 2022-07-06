@@ -8,22 +8,40 @@ const feedObj = {
   iuser: 0,
 
   // 멤버 메소드
-  getFeedList: function() {
-    this.showLoading();            
+  setScrollInfinity: function() {
+    window.addEventListener('scroll', e => {
+      const {
+          scrollTop,
+          scrollHeight,
+          clientHeight
+      } = document.documentElement;
+
+      if( scrollTop + clientHeight >= scrollHeight - 10 && this.itemLength === this.limit ) {               
+          this.getFeedList();
+      }
+
+  }, { passive: true });
+},
+
+  getFeedList: function () {
+    this.itemLength = 0;
+    this.showLoading();
     const param = {
-      page: this.currentPage++,        
+      page: this.currentPage++,
       iuser: this.iuser
     }
     fetch(this.getFeedUrl + encodeQueryString(param))
-    .then(res => res.json())
-    .then(list => {                
-      this.makeFeedList(list);                
-    })
-    .catch(e => {
-      console.error(e);
-      this.hideLoading();
-    });
+      .then(res => res.json())
+      .then(list => {
+        this.itemLength = list.length;
+        this.makeFeedList(list);
+      })
+      .catch(e => {
+        console.error(e);
+        this.hideLoading();
+      });
   },
+
   refreshSwipe: function () {
     if (this.swiper !== null) { this.swiper = null; }
     this.swiper = new Swiper('.swiper', {
@@ -37,6 +55,7 @@ const feedObj = {
       loop: false
     });
   },
+
   loadingElem: document.querySelector('.loading'),
   containerElem: document.querySelector('#item_container'),
   getFeedCmtList: function (ifeed, divCmtList, spanMoreCmt) {
@@ -53,6 +72,7 @@ const feedObj = {
         }
       });
   },
+
   makeCmtItem: function (item) {
     const divCmtItemContainer = document.createElement('div');
     divCmtItemContainer.className = 'd-flex flex-row align-items-center mb-2';
@@ -72,6 +92,7 @@ const feedObj = {
     });
     return divCmtItemContainer;
   },
+
   makeFeedList: function (list) {
     if (list.length !== 0) {
       list.forEach(item => {
@@ -82,6 +103,7 @@ const feedObj = {
     this.refreshSwipe();
     this.hideLoading();
   },
+
   makeFeedItem: function (item) {
     console.log(item);
     const divContainer = document.createElement('div');
@@ -345,6 +367,7 @@ function moveToFeedWin(iuser) {
                 const feedItem = feedObj.makeFeedItem(myJson);
                 feedObj.containerElem.prepend(feedItem);
                 feedObj.refreshSwipe();
+                window.scrollTo(0, 0);
               }
             });
 
