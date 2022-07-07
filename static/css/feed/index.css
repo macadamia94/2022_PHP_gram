@@ -7,3 +7,8 @@ main {
 
 #item_container > .item { border: 1px solid #dfdfdf; border-radius: 8px; background-color: #fff;
 font-family: var(--font) }
+
+.spanNick { font-family: 'Binggrae-Bold'; }
+.spanNick:hover { text-decoration: underline; }
+.reg_date { font-size: .7rem; color: #727272; }
+.font_loc { font-size: small; }

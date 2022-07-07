@@ -109,12 +109,33 @@ class UserController extends Controller {
   // 프로필
   public function profile() {
     switch (getMethod()) {
+      case _POST:
+        $loginUser = getLoginUser();
+        $saveDirectory = _IMG_PATH . "/profile/" . getIuser();
+        if($loginUser->mainimg) {
+          unlink($saveDirectory . "/" . $loginUser->mainimg);
+        }
+        $tempName = $_FILES['imgs']['tmp_name'][0];
+        $randomFileNm = getRandomFileNm($_FILES["imgs"]["name"][0]);
+        if (move_uploaded_file($tempName, $saveDirectory . "/" . $randomFileNm)) {
+          $param = [
+            "iuser" => getIuser(),
+            "mainimg" => $randomFileNm
+          ];
+          $this->model->updUser($param);
+          $loginUser->mainimg = $randomFileNm;
+          return [_RESULT => 1];
+        }
       case _DELETE:
         $loginUser = getLoginUser();
         if ($loginUser && $loginUser->mainimg !== null) {
-          $path = "static/img/profile/{$loginUser->iuser}/{$loginUser->mainimg}";
+          $path = _IMG_PATH . "/profile/" . getMainimgSrc();
+          // $path = "static/img/profile/{$loginUser->iuser}/{$loginUser->mainimg}";
           if (file_exists($path) && unlink($path)) {
-            $param = ["iuser" => $loginUser->iuser, "delMainImg" => 1];
+            $param = [
+              "iuser" => getIuser(), 
+              "delMainImg" => 1
+            ];
             if ($this->model->updUser($param)) {
               $loginUser->mainimg = null;
               return [_RESULT => 1];
