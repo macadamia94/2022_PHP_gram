@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once "application/views/template/head.php"; ?>
-<body>
+<body class="h-full container-center">
     <div>
         <h1>회원가입</h1>
 
