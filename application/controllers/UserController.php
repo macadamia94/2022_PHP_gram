@@ -111,13 +111,10 @@ class UserController extends Controller {
     switch (getMethod()) {
       case _DELETE:
         $loginUser = getLoginUser();
-        if ($loginUser) {
+        if ($loginUser && $loginUser->mainimg !== null) {
           $path = "static/img/profile/{$loginUser->iuser}/{$loginUser->mainimg}";
           if (file_exists($path) && unlink($path)) {
-            $param = [
-              "iuser" => $loginUser->iuser,
-              "delMainImg" => 1
-            ];
+            $param = ["iuser" => $loginUser->iuser, "delMainImg" => 1];
             if ($this->model->updUser($param)) {
               $loginUser->mainimg = null;
               return [_RESULT => 1];
