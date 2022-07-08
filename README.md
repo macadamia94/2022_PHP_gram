@@ -3,24 +3,24 @@
 
 < composer 설치 >			
 php.ini</br> 			
-zend_extension=xdebug			
-주석(;) 후 설치			
-https://getcomposer.org/download/			
-설치 안되면 			
-extension=openssl			
-주석(;) 해제 했는지 확인			
-
-Vscode → composer.json 내용 추가			
-
-{				
-  "autoload": {				
-    "psr-4": {				
-      "ws\\": "ws/",				
-      "application\\": "application/"				
-    }				
-  },				
-  "require": {				
-    "cboden/ratchet": "^0.4.4"				
-  }				
-}				
+zend_extension=xdebug</br> 				
+주석(;) 후 설치</br> 				
+https://getcomposer.org/download/	</br> 			
+설치 안되면 </br> 				
+extension=openssl	</br> 			
+주석(;) 해제 했는지 확인 </br> 		
+</br> 	
+Vscode → composer.json 내용 추가</br> 				
+</br> 	
+{</br> 					
+  "autoload": {</br> 					
+    "psr-4": {</br> 					
+      "ws\\": "ws/",</br> 					
+      "application\\": "application/"</br> 					
+    }</br> 					
+  },</br> 					
+  "require": {</br> 					
+    "cboden/ratchet": "^0.4.4"</br> 					
+  }</br> 					
+}</br> 					
 
