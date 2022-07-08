@@ -24,3 +24,5 @@ Vscode → composer.json 내용 추가</br>
   }</br> 					
 }</br> 					
 
+Vscode → TERMINAL 아래 입력 </br> 	
+composer dump-autoload </br> 
