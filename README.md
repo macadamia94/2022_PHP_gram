@@ -1,15 +1,7 @@
-# 2022_PHP_gram
-학원수업_MVC_v2 + 연습
+# composer 설치
+  - https://techhans.tistory.com/57
+  - http://getcomposer.org/download
 
-< composer 설치 >	</br> 		
-php.ini</br> 			
-zend_extension=xdebug</br> 				
-주석(;) 후 설치</br> 				
-https://getcomposer.org/download/	</br> 			
-설치 안되면 </br> 				
-extension=openssl	</br> 			
-주석(;) 해제 했는지 확인 </br> 		
-</br> 	
 Vscode → composer.json 내용 추가</br> 				
 </br> 	
 {</br> 					
@@ -24,5 +16,21 @@ Vscode → composer.json 내용 추가</br>
   }</br> 					
 }</br> 					
 
-Vscode → TERMINAL 아래 입력 </br> 	
-composer dump-autoload </br> 
+# ratchet 라이브러리 설치
+  명령프롬프트
+  composer require cboden/ratchet
+
+# composer.json, autoload 적용
+  Vscode → TERMINAL 아래 입력 </br> 	
+  composer dump-autoload </br> 
+
+# 웹소켓 서버 실행 (CLI에서)
+  php socketRun.php
+  
+# 웹소켓 서버 실행시 xdebug 에러 발생 시
+  
+  (php.ini 파일 내용 중, 아래 부분 주석 처리로 해결)
+  ;zend_extension=xdebug
+
+  (php.ini 파일 내용 중, 아래 부분 주석 해제로 해결)
+  extension=openssl
