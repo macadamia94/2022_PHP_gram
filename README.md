@@ -1,7 +1,7 @@
 # 2022_PHP_gram
 학원수업_MVC_v2 + 연습
 
-< composer 설치 >			
+< composer 설치 >	</br> 		
 php.ini</br> 			
 zend_extension=xdebug</br> 				
 주석(;) 후 설치</br> 				
