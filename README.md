@@ -15,8 +15,8 @@ Vscode → composer.json 내용 추가</br>
 {</br> 					
   "autoload": {</br> 					
     "psr-4": {</br> 					
-      "ws\\\": "ws/",</br> 					
-      "application\\\": "application/"</br> 					
+      "ws*\\": "ws/",</br> 					
+      "application*\\": "application/"</br> 					
     }</br> 					
   },</br> 					
   "require": {</br> 					
