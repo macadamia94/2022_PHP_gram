@@ -2,7 +2,7 @@
 학원수업_MVC_v2 + 연습
 
 < composer 설치 >			
-php.ini 			
+php.ini</br> 			
 zend_extension=xdebug			
 주석(;) 후 설치			
 https://getcomposer.org/download/			
