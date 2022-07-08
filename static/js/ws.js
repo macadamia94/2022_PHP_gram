@@ -1,4 +1,4 @@
-const ws = new WebSocket("ws://localhost:8090/");
+const ws = new WebSocket("ws://192.168.0.39:8090/");
 
 (function () {
 
