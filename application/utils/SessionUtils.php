@@ -1,5 +1,5 @@
 <?php
-  session_start();
+  session_start();  // ← 지워도 상관 없음
 
   function getLoginUser() {
     return isset($_SESSION[_LOGINUSER]) ? $_SESSION[_LOGINUSER] : null;

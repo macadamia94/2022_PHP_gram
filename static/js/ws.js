@@ -1,4 +1,4 @@
-const ws = new WebSocket("ws://192.168.0.39:8090/");
+const ws = new WebSocket("ws://192.168.0.39:8090/");  // 도메인 주소나 자기 자신의 IP주소
 
 (function () {
 
@@ -12,12 +12,14 @@ const ws = new WebSocket("ws://192.168.0.39:8090/");
 
     ws.onopen = function (e) {
       console.log('ws open!!');
+      /*
       ws.send(
         JSON.stringify({
           'type': 'conn',
           'iuser': loginiuser,
         })
       );
+      */
     };
 
     ws.onerror = function (e) {
@@ -41,9 +43,10 @@ const ws = new WebSocket("ws://192.168.0.39:8090/");
             }
 
           } else { //현재 페이지가 dm페이지가 아니라면, header에 있는 dm아이콘 작업
+            if(loginiuser !== json.toiuser) { return; }
 
             const cnt = parseInt(totalDmUnreadCnt.innerText);
-            totalDmUnreadCnt.innerText = cnt + 1;
+            totalDmUnreadCnt.innerText = cnt + 1; // dm오면 dm아이콘에 숫자 올라가는 부분
             totalDmUnreadCntParent.classList.remove("d-none");
 
           }

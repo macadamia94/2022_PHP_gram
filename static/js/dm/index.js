@@ -1,7 +1,13 @@
 (function () {
   function sendMsg(msg) {
     if (ws) {
-      ws.send(JSON.stringify({ type: 'dm', idm: gIdm, iuser: loginiuser, toiuser: oppoiuser, msg: msg }))
+      ws.send(JSON.stringify({ 
+        type: 'dm', 
+        idm: gIdm, 
+        iuser: loginiuser, 
+        toiuser: oppoiuser,
+         msg: msg 
+        }))
     }
   }
 
@@ -26,7 +32,7 @@
   }
 
 
-  //사용자 리스트 가져오기
+  //대화 상대방 리스트 가져오기
   function getDmUserList() {
     fetch('/dm/dmlist')
       .then(res => res.json())
@@ -34,6 +40,7 @@
         makeDmUserList(res);
       });
   }
+  getDmUserList();
 
   function makeDmUserList(userList) {
     let isNonExistent = true;
@@ -84,10 +91,17 @@
       getDmMsgList(item.idm);
       setIdm(item.idm);
       oppoiuser = item.opponent.iuser;
+      const div2 = dmUserListContainerElem.querySelectorAll('div');
+      div2.forEach(i => {
+        if(i.classList.contains('select')) {
+          i.classList.remove('select');
+
+        }
+      })
+      div.classList.add('select');
     })
     return div;
   }
-  getDmUserList();
 
 
 
@@ -156,9 +170,16 @@
 function makeDmMsgItem(loginiuser, item) {
   //로그인 한 클라이언트와 타 클라이언트를 분류하기 위함
   const div = document.createElement('div');
-  div.className = 'col-6';
+  div.className = 'd-flex';
 
-  const inClassName = loginiuser === item.iuser ? 'alert-warning' : 'alert-secondary';
+  let inClassName = '';
+  if (loginiuser === item.iuser) {
+    inClassName = 'alert-warning';
+    div.classList.add('justify-content-end');
+  } else {
+    inClassName = 'alert-secondary';
+    div.classList.add('justify-content-start');
+  }
 
   div.innerHTML = `
       <div class='alert ${inClassName}'>

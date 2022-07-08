@@ -7,7 +7,7 @@ use Ratchet\ConnectionInterface;
 use application\libs\Application;
 //use application\models\DmModel;
 
-class RatchetSocket implements MessageComponentInterface {
+class RatchetSocket implements MessageComponentInterface {  // implements 구현, extends 상속
   protected $clients;
 
   public function __construct() {
@@ -16,7 +16,7 @@ class RatchetSocket implements MessageComponentInterface {
   }
 
   // 클라이언트 접속
-  public function onOpen(ConnectionInterface $conn) {
+  public function onOpen(ConnectionInterface $conn) { 
     // clients 객체에 클라이언트 추가
     $this->clients->attach($conn);
     $conn->send($conn->resourceId);
@@ -31,9 +31,9 @@ class RatchetSocket implements MessageComponentInterface {
     switch ($data->type) {
       case "dm":
         $param = [
-          "idm" => $data->idm,
-          "loginiuser" => $data->iuser,
-          "msg" => $data->msg
+          "idm" => $data->idm,  // 어느 방에서의 대화인지
+          "loginiuser" => $data->iuser, // 내가 누구인지
+          "msg" => $data->msg // 어떤 내용의 메시지인지
         ];
         $model = Application::getModel("dm");
         $model->insDmMsg($param);
@@ -42,8 +42,8 @@ class RatchetSocket implements MessageComponentInterface {
         break;
     }
 
-    foreach ($this->clients as $client) {
-      //메세지 전송
+    foreach ($this->clients as $client) { // 전체 브로드캐스트 시킴 → 보안상 안 좋음
+      //메세지 전송 
       print "send!!!\n";
       print $msg . "\n";
       $client->send($msg);
