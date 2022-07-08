@@ -124,7 +124,7 @@ class UserController extends Controller {
           ];
           $this->model->updUser($param);
           $loginUser->mainimg = $randomFileNm;
-          return [_RESULT => 1];
+          return [_RESULT => $randomFileNm];
         }
       case _DELETE:
         $loginUser = getLoginUser();

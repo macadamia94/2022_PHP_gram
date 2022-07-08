@@ -27,6 +27,7 @@ getFeedList();
 */
 
 (function () {
+  const url = new URL(location.href);
   const spanCntFollower = document.querySelector('#spanCntFollower');
   const lData = document.querySelector('#lData');
   const btnFollow = document.querySelector('#btnFollow');
@@ -87,6 +88,7 @@ getFeedList();
     });
   }
 
+  const modalItem = document.createElement('div');
   const gData2 = document.querySelector('#gData').dataset.mainimg;    //head gData에 mainimg 데이터셋 추가 했음
   const btnUpdProfilePic = document.querySelector('#btnUpdProfilePic');   //사진 업로드 id
   
@@ -144,7 +146,7 @@ getFeedList();
                 profileimgList.forEach(item => {
                   item.src = `/static/img/profile/${parseInt(url.searchParams.get('iuser'))}/${res.result}`;
                 });
-
+                console.log(res.result);
                 btnClose.click();
                 //이미지 등록하면 d-none 삭제
                 modalItem.classList.remove('d-none');
